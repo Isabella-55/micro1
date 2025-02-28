@@ -31,5 +31,3 @@ Bucle_Infinito:
 	goto     Bucle_Infinito      ; Mantenerse en un bucle infinito
 
     END
-
-
