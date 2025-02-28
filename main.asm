@@ -1,129 +1,92 @@
+    
 ; PIC18F4550 Configuration Bit Settings
+
+; ASM source line config statements
 
 #include "p18F4550.inc"
 
 ; CONFIG1L
-  CONFIG  PLLDIV = 1            
-  CONFIG  CPUDIV = OSC1_PLL2    
-  CONFIG  USBDIV = 1            
+  CONFIG  PLLDIV = 1            ; PLL Prescaler Selection bits (No prescale (4 MHz oscillator input drives PLL directly))
+  CONFIG  CPUDIV = OSC1_PLL2    ; System Clock Postscaler Selection bits ([Primary Oscillator Src: /1][96 MHz PLL Src: /2])
+  CONFIG  USBDIV = 1            ; USB Clock Selection bit (used in Full-Speed USB mode only; UCFG:FSEN = 1) (USB clock source comes directly from the primary oscillator block with no postscale)
 
 ; CONFIG1H
-  CONFIG  FOSC = INTOSCIO_EC    
-  CONFIG  FCMEN = OFF           
-  CONFIG  IESO = OFF            
+  CONFIG  FOSC = INTOSCIO_EC    ; Oscillator Selection bits (Internal oscillator, port function on RA6, EC used by USB (INTIO))
+  CONFIG  FCMEN = OFF           ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
+  CONFIG  IESO = OFF            ; Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
 
 ; CONFIG2L
-  CONFIG  PWRT = OFF            
-  CONFIG  BOR = OFF             
-  CONFIG  BORV = 3              
-  CONFIG  VREGEN = OFF          
+  CONFIG  PWRT = OFF            ; Power-up Timer Enable bit (PWRT disabled)
+  CONFIG  BOR = OFF             ; Brown-out Reset Enable bits (Brown-out Reset disabled in hardware and software)
+  CONFIG  BORV = 3              ; Brown-out Reset Voltage bits (Minimum setting 2.05V)
+  CONFIG  VREGEN = OFF          ; USB Voltage Regulator Enable bit (USB voltage regulator disabled)
 
 ; CONFIG2H
-  CONFIG  WDT = OFF             
-  CONFIG  WDTPS = 32768         
+  CONFIG  WDT = OFF             ; Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
+  CONFIG  WDTPS = 32768         ; Watchdog Timer Postscale Select bits (1:32768)
 
 ; CONFIG3H
-  CONFIG  CCP2MX = ON           
-  CONFIG  PBADEN = OFF          
-  CONFIG  LPT1OSC = OFF         
-  CONFIG  MCLRE = OFF           
+  CONFIG  CCP2MX = ON           ; CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
+  CONFIG  PBADEN = OFF          ; PORTB A/D Enable bit (PORTB<4:0> pins are configured as digital I/O on Reset)
+  CONFIG  LPT1OSC = OFF         ; Low-Power Timer 1 Oscillator Enable bit (Timer1 configured for higher power operation)
+  CONFIG  MCLRE = OFF           ; MCLR Pin Enable bit (RE3 input pin enabled; MCLR pin disabled)
 
 ; CONFIG4L
-  CONFIG  STVREN = ON           
-  CONFIG  LVP = OFF             
-  CONFIG  ICPRT = OFF           
-  CONFIG  XINST = OFF           
+  CONFIG  STVREN = ON           ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
+  CONFIG  LVP = OFF             ; Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
+  CONFIG  ICPRT = OFF           ; Dedicated In-Circuit Debug/Programming Port (ICPORT) Enable bit (ICPORT disabled)
+  CONFIG  XINST = OFF           ; Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
 
 ; CONFIG5L
-  CONFIG  CP0 = OFF             
-  CONFIG  CP1 = OFF             
-  CONFIG  CP2 = OFF             
-  CONFIG  CP3 = OFF             
+  CONFIG  CP0 = OFF             ; Code Protection bit (Block 0 (000800-001FFFh) is not code-protected)
+  CONFIG  CP1 = OFF             ; Code Protection bit (Block 1 (002000-003FFFh) is not code-protected)
+  CONFIG  CP2 = OFF             ; Code Protection bit (Block 2 (004000-005FFFh) is not code-protected)
+  CONFIG  CP3 = OFF             ; Code Protection bit (Block 3 (006000-007FFFh) is not code-protected)
 
 ; CONFIG5H
-  CONFIG  CPB = OFF             
-  CONFIG  CPD = OFF             
+  CONFIG  CPB = OFF             ; Boot Block Code Protection bit (Boot block (000000-0007FFh) is not code-protected)
+  CONFIG  CPD = OFF             ; Data EEPROM Code Protection bit (Data EEPROM is not code-protected)
 
 ; CONFIG6L
-  CONFIG  WRT0 = OFF            
-  CONFIG  WRT1 = OFF            
-  CONFIG  WRT2 = OFF            
-  CONFIG  WRT3 = OFF            
+  CONFIG  WRT0 = OFF            ; Write Protection bit (Block 0 (000800-001FFFh) is not write-protected)
+  CONFIG  WRT1 = OFF            ; Write Protection bit (Block 1 (002000-003FFFh) is not write-protected)
+  CONFIG  WRT2 = OFF            ; Write Protection bit (Block 2 (004000-005FFFh) is not write-protected)
+  CONFIG  WRT3 = OFF            ; Write Protection bit (Block 3 (006000-007FFFh) is not write-protected)
 
 ; CONFIG6H
-  CONFIG  WRTC = OFF            
-  CONFIG  WRTB = OFF            
-  CONFIG  WRTD = OFF            
+  CONFIG  WRTC = OFF            ; Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) are not write-protected)
+  CONFIG  WRTB = OFF            ; Boot Block Write Protection bit (Boot block (000000-0007FFh) is not write-protected)
+  CONFIG  WRTD = OFF            ; Data EEPROM Write Protection bit (Data EEPROM is not write-protected)
 
 ; CONFIG7L
-  CONFIG  EBTR0 = OFF           
-  CONFIG  EBTR1 = OFF           
-  CONFIG  EBTR2 = OFF           
-  CONFIG  EBTR3 = OFF           
+  CONFIG  EBTR0 = OFF           ; Table Read Protection bit (Block 0 (000800-001FFFh) is not protected from table reads executed in other blocks)
+  CONFIG  EBTR1 = OFF           ; Table Read Protection bit (Block 1 (002000-003FFFh) is not protected from table reads executed in other blocks)
+  CONFIG  EBTR2 = OFF           ; Table Read Protection bit (Block 2 (004000-005FFFh) is not protected from table reads executed in other blocks)
+  CONFIG  EBTR3 = OFF           ; Table Read Protection bit (Block 3 (006000-007FFFh) is not protected from table reads executed in other blocks)
 
 ; CONFIG7H
-  CONFIG  EBTRB = OFF           
+  CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot block (000000-0007FFh) is not protected from table reads executed in other blocks)
 
-    LIST    P=18F4550           ; Especifica el microcontrolador
+  
+    LIST    P=18F4550          ; Especifica el microcontrolador
 
-    ORG     0x0000              ; Vector de reset
-    GOTO    START               ; Salta al inicio del programa
+    ORG     0x0000             ; Vector de reset
+    GOTO    START              ; Salta al inicio del programa
 
-    ORG     0x0020              ; Inicio del código principal
+    ORG     0x0020             ; Inicio del código principal
 
 START:
-    MOVLW   0x72
-    MOVWF   OSCCON              ; Configura el oscilador interno a 8MHz
     
-    CLRF    TRISB               ; Configura el puerto B como salida
-    CLRF    PORTB               ; Limpia el puerto B (apaga todos los LEDs)
+    MOVLW 0x72
+    MOVWF OSCCON ;Fcsc Interna 8MHz
+    
+    CLRF    TRISB              ; Configura el puerto B como salida
+    CLRF    PORTB              ; Limpia el puerto B (apaga todos los LEDs)
 
 MAIN_LOOP:
-    MOVLW   0xAA               ; Carga 0xFF en W (todos los bits en 1)
-    MOVWF   LATB               ; Enciende todos los LEDs en PORTB
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
-    
-    MOVLW   0x55               ; Carga 0x00 en W (todos los bits en 0)
-    MOVWF   LATB               ; Apaga todos los LEDs en PORTB
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
+    BSF     LATB, RB0         ; Enciende el LED en RB0
+    GOTO    MAIN_LOOP          ; Repite el ciclo
 
+    END                       ; Fin del programa
 
-    GOTO    MAIN_LOOP           ; Repite el ciclo
-
-
-DELAY
-  MOVLW   6
-  MOVWF   0x23                 ; Contador externo para repetir el retardo
-
-LOOP_DELAY:
-  CALL    RETARDO
-  DECFSZ  0x23, F
-  GOTO    LOOP_DELAY
-  RETURN 
-
-RETARDO:
-    MOVLW   0xD0
-    MOVWF   0x21               ; Primer contador interno
-
-REP_1:
-    MOVLW   0xD0
-    MOVWF   0x22               ; Segundo contador interno
-
-REP_2:
-    DECFSZ  0x22, F
-    GOTO    REP_2
-    DECFSZ  0x21, F
-    GOTO    REP_1
-    RETURN
-
-    END                         ; Fin del programa
-
-
-
-
-;enciende 1010 1010 = AA
-;delay de 2 segundos 
-;enciende 0101 0101 = 55
-;delay de 2 segundos
+    ;Codigo para prender el led
