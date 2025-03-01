@@ -1,3 +1,4 @@
+;CÓDIGO DE RETARDO EN LED
 ; PIC18F4550 C
 #include "p18F4550.inc"
 
