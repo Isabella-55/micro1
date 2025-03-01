@@ -1,99 +1,42 @@
-; PIC18F4550 Configuration Bit Settings
+;CÓDIGO DE SECUENCIA DE LEDS
+; PIC18F4550 
 
 #include "p18F4550.inc"
 
-; CONFIG1L
-  CONFIG  PLLDIV = 1            
-  CONFIG  CPUDIV = OSC1_PLL2    
-  CONFIG  USBDIV = 1            
-
-; CONFIG1H
   CONFIG  FOSC = INTOSCIO_EC    
-  CONFIG  FCMEN = OFF           
-  CONFIG  IESO = OFF            
+  CONFIG  WDT = OFF                       
+  CONFIG  LVP = OFF                       
 
-; CONFIG2L
-  CONFIG  PWRT = OFF            
-  CONFIG  BOR = OFF             
-  CONFIG  BORV = 3              
-  CONFIG  VREGEN = OFF          
+    LIST    P=18F4550           
 
-; CONFIG2H
-  CONFIG  WDT = OFF             
-  CONFIG  WDTPS = 32768         
+    ORG     0x0000              ; vector de reset
+    GOTO    START               
 
-; CONFIG3H
-  CONFIG  CCP2MX = ON           
-  CONFIG  PBADEN = OFF          
-  CONFIG  LPT1OSC = OFF         
-  CONFIG  MCLRE = OFF           
-
-; CONFIG4L
-  CONFIG  STVREN = ON           
-  CONFIG  LVP = OFF             
-  CONFIG  ICPRT = OFF           
-  CONFIG  XINST = OFF           
-
-; CONFIG5L
-  CONFIG  CP0 = OFF             
-  CONFIG  CP1 = OFF             
-  CONFIG  CP2 = OFF             
-  CONFIG  CP3 = OFF             
-
-; CONFIG5H
-  CONFIG  CPB = OFF             
-  CONFIG  CPD = OFF             
-
-; CONFIG6L
-  CONFIG  WRT0 = OFF            
-  CONFIG  WRT1 = OFF            
-  CONFIG  WRT2 = OFF            
-  CONFIG  WRT3 = OFF            
-
-; CONFIG6H
-  CONFIG  WRTC = OFF            
-  CONFIG  WRTB = OFF            
-  CONFIG  WRTD = OFF            
-
-; CONFIG7L
-  CONFIG  EBTR0 = OFF           
-  CONFIG  EBTR1 = OFF           
-  CONFIG  EBTR2 = OFF           
-  CONFIG  EBTR3 = OFF           
-
-; CONFIG7H
-  CONFIG  EBTRB = OFF           
-
-    LIST    P=18F4550           ; Especifica el microcontrolador
-
-    ORG     0x0000              ; Vector de reset
-    GOTO    START               ; Salta al inicio del programa
-
-    ORG     0x0020              ; Inicio del c�digo principal
+    ORG     0x0020              ; inicio del código principal
 
 START:
     MOVLW   0x72
-    MOVWF   OSCCON              ; Configura el oscilador interno a 8MHz
+    MOVWF   OSCCON              ; configura el oscilador interno a 8MHz
     
-    CLRF    TRISB               ; Configura el puerto B como salida
-    CLRF    PORTB               ; Limpia el puerto B (apaga todos los LEDs)
+    CLRF    TRISB               ; configura el puerto B como salida
+    CLRF    PORTB               ; limpia el puerto B (apaga todos los LEDs)
 
 MAIN_LOOP:
-    MOVLW   0xFF               ; Carga 0xFF en W (todos los bits en 1)
-    MOVWF   LATB               ; Enciende todos los LEDs en PORTB
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
+    MOVLW   0xFF               ; carga 0xFF en W (todos los bits en 1)
+    MOVWF   LATB               ; enciende todos los LEDs en PORTB
+    CALL    DELAY              ;llama a la rutina de retardo (1s)
     
-    MOVLW   0x00               ; Carga 0x00 en W (todos los bits en 0)
-    MOVWF   LATB               ; Apaga todos los LEDs en PORTB
-    CALL    DELAY               ; Llama a la rutina de retardo (1s)
+    MOVLW   0x00               ; carga 0x00 en W (todos los bits en 0)
+    MOVWF   LATB               ; apaga todos los LEDs en PORTB
+    CALL    DELAY              ;llama a la rutina de retardo (1s)
 
 
-    GOTO    MAIN_LOOP           ; Repite el ciclo
+    GOTO    MAIN_LOOP           ;repite el ciclo
 
 
 DELAY
   MOVLW   6
-  MOVWF   0x23                 ; Contador externo para repetir el retardo
+  MOVWF   0x23                 ; contador externo para repetir el retardo
 
 LOOP_DELAY:
   CALL    RETARDO
@@ -103,11 +46,11 @@ LOOP_DELAY:
 
 RETARDO:
     MOVLW   0xD0
-    MOVWF   0x21               ; Primer contador interno
+    MOVWF   0x21               ; 1er contador interno
 
 REP_1:
     MOVLW   0xD0
-    MOVWF   0x22               ; Segundo contador interno
+    MOVWF   0x22               ; sgn contador interno
 
 REP_2:
     DECFSZ  0x22, F
@@ -116,7 +59,7 @@ REP_2:
     GOTO    REP_1
     RETURN
 
-    END                         ; Fin del programa
+    END                         ; 
 
 ;se encienden todos y luego se apagan
 ;delay de un segundo
