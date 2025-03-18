@@ -2,7 +2,6 @@ CLASE 05
 Escribir en lenguaje C un programa que: Pida por teclado la duración en minutos (dato entero) de una llamada telefónica. Calcule el coste de la llamada telefónica. Muestre por pantalla el resultado (dato real) en pesos. Nota: 1 Minuto = 45.48 pesos.
 
 #include <stdio.h>
-
 int main() {
     int minutos;          // Variable para almacenar la duración de la llamada en minutos
     float coste;          // Variable para almacenar el coste de la llamada en pesos
@@ -21,11 +20,10 @@ int main() {
 }
 
 Escribir en lenguaje C un programa que: Pida por teclado la nota (dato real) de una asignatura. En el caso de que la nota sea incorrecta, muestre por pantalla el mensaje: "ERROR: Nota incorrecta, debe ser >= 0,0 y <= 5,0". Repita los pasos 1º y 2º, mientras que, la nota introducida sea incorrecta. Muestre por pantalla: "APROBADO", en el caso de que la nota sea mayor o igual que 3,0. "SUSPENDIDO", en el caso de que la nota sea menor que 3,0. Nota: Utilizar un bucle while
-#include <stdio.h>
 
+#include <stdio.h>
 int main() {
     float nota;  // Variable para almacenar la nota de la asignatura
-
     // Solicitar la nota al usuario y verificar que sea correcta
     do {
         printf("Introduce la nota de la asignatura (0.0 - 5.0): ");
@@ -48,8 +46,8 @@ int main() {
 }
 CLASE 06
 1.	Hacer un programa informático que realice las operaciones matemáticas de suma, resta, división y multiplicación entre dos números.
-#include <stdio.h>
 
+#include <stdio.h>
 int main() {
     float num1, num2;  // Definimos las variables para los dos números
     int opcion;         // Variable para la opción de operación
@@ -97,8 +95,8 @@ int main() {
 }
 
 2.	Mostrar la suma de los 50 primeros números.
-#include <stdio.h>
 
+#include <stdio.h>
 int main() {
     int suma = 0;
 
@@ -113,8 +111,8 @@ int main() {
     return 0;
 }
 3.	Encuentre la serie de Fibonacci hasta el término ≤1000
-#include <stdio.h>
 
+#include <stdio.h>
 int main() {
     int a = 0, b = 1, c;
 
@@ -138,6 +136,7 @@ int main() {
     return 0;
 }
 4.	Encuentra todas las raíces de una ecuación cuadrática ax2+bx+c=0
+
 #include <stdio.h>
 #include <math.h>  // Para usar la función sqrt()
 
@@ -180,8 +179,8 @@ int main() {
 }
 
 5.	Encuentra el mayor entre tres números diferentes ingresados por el usuario.
-#include <stdio.h>
 
+#include <stdio.h>
 int main() {
     float num1, num2, num3;
 
@@ -212,7 +211,6 @@ int main() {
 6.	Escribir un programa que visualice un led verde cuando el valor de una variable sea mayor de 127, un led amarillo cuando el valor de variable este entre 64 y 127 y un led rojo cuando el valor de la variable sea menor a 64.
 
 #include <stdio.h>
-
 int main() {
     int valor;  // Variable que representa el valor de entrada
 
@@ -248,7 +246,7 @@ Se necesita diseñar una estructura de datos para el buzón de entrada de un tel
 #define MAX_TEXTO_MMS 200
 #define MAX_RUTA_IMAGEN 255
 
-// Estructura para los mensajes SMS
+// Estructura para los mensajes SMS:
 struct SMS {
     char remitente[15];        // Número de teléfono (remitente)
     int fechaHora;             // Fecha/hora del mensaje
@@ -256,7 +254,7 @@ struct SMS {
     char tipo[4];              // Tipo de mensaje: "SMC" o "normal"
 };
 
-// Estructura para los mensajes MMS
+// Estructura para los mensajes MMS:
 struct MMS {
     char remitente[15];        // Número de teléfono (remitente)
     int fechaHora;             // Fecha/hora del mensaje
@@ -264,7 +262,7 @@ struct MMS {
     char rutaImagen[MAX_RUTA_IMAGEN]; // Ruta de la imagen contenida
 };
 
-// Unión para almacenar un mensaje SMS o MMS
+// Unión para almacenar un mensaje SMS o MMS:
 union Mensaje {
     struct SMS sms; // Mensaje SMS
     struct MMS mms; // Mensaje MMS
@@ -325,93 +323,9 @@ int main() {
     return 0;
 }
 
-
-#include <stdio.h>
-#include <string.h>
-
-#define MAX_MENSAJES 100
-#define MAX_TEXTO_SMS 140
-#define MAX_TEXTO_MMS 200
-#define MAX_RUTA_IMAGEN 255
-
-// Estructura para los mensajes SMS
-struct SMS {
-    char remitente[15];        // Número de teléfono (remitente)
-    int fechaHora;             // Fecha/hora del mensaje
-    char texto[MAX_TEXTO_SMS]; // Texto del mensaje
-    char tipo[4];              // Tipo de mensaje: "SMC" o "normal"
-};
-
-// Estructura para los mensajes MMS
-struct MMS {
-    char remitente[15];        // Número de teléfono (remitente)
-    int fechaHora;             // Fecha/hora del mensaje
-    char texto[MAX_TEXTO_MMS]; // Texto del mensaje
-    char rutaImagen[MAX_RUTA_IMAGEN]; // Ruta de la imagen contenida
-};
-
-// Unión para almacenar un mensaje SMS o MMS
-union Mensaje {
-    struct SMS sms; // Mensaje SMS
-    struct MMS mms; // Mensaje MMS
-};
-
-// Estructura para el buzón de entrada que contiene hasta 100 mensajes
-struct Buzon {
-    union Mensaje mensajes[MAX_MENSAJES]; // Tabla de 100 mensajes
-    int totalMensajes; // Número total de mensajes en el buzón
-};
-
-int main() {
-    // Crear un buzón de entrada
-    struct Buzon buzon;
-    buzon.totalMensajes = 0;
-
-    // Crear un mensaje SMS
-    struct SMS nuevoSMS = {
-        "123456789",      // remitente
-        202303141230,     // fecha/hora
-        "Hola, ¿cómo estás?", // texto
-        "normal"          // tipo
-    };
-
-    // Almacenar el mensaje en el buzón
-    buzon.mensajes[buzon.totalMensajes].sms = nuevoSMS;
-    buzon.totalMensajes++;
-
-    // Crear un mensaje MMS
-    struct MMS nuevoMMS = {
-        "987654321",          // remitente
-        202303141400,         // fecha/hora
-        "Mira esta imagen",   // texto
-        "/ruta/a/imagen.jpg"  // ruta de la imagen
-    };
-
-    // Almacenar el mensaje en el buzón
-    buzon.mensajes[buzon.totalMensajes].mms = nuevoMMS;
-    buzon.totalMensajes++;
-
-    // Mostrar los mensajes almacenados
-    for (int i = 0; i < buzon.totalMensajes; i++) {
-        if (buzon.mensajes[i].sms.texto[0] != '\0') {  // Verificamos si el SMS tiene texto
-            printf("Mensaje SMS de %s:\n", buzon.mensajes[i].sms.remitente);
-            printf("Fecha/Hora: %d\n", buzon.mensajes[i].sms.fechaHora);
-            printf("Texto: %s\n", buzon.mensajes[i].sms.texto);
-            printf("Tipo: %s\n\n", buzon.mensajes[i].sms.tipo);
-        } else {
-            printf("Mensaje MMS de %s:\n", buzon.mensajes[i].mms.remitente);
-            printf("Fecha/Hora: %d\n", buzon.mensajes[i].mms.fechaHora);
-            printf("Texto: %s\n", buzon.mensajes[i].mms.texto);
-            printf("Ruta Imagen: %s\n\n", buzon.mensajes[i].mms.rutaImagen);
-        }
-    }
-
-    return 0;
-}
 Construir un programa dotado de un menú de Archivo, otro de Edición y otro de Texto. El menú Archivo ofrecerá las opciones Nuevo, Abrir, Guardar, Cerrar y Salir. El menú Edición ofrecerá las opciones Deshacer, Cortar, Copiar y Pegar. El menú Texto ofrecerá las opciones Menor, Medio y Mayor. El programa debe mostrar una barra con los menús Archivo, Edición y Texto; cuando el usuario seleccione uno de ellos, aparecerán las opciones correspondientes a ese menú y el usuario podrá seleccionar una de ellas. Hecho esto, el programa mostrará el menú y la opción seleccionados, en la forma siguiente: Se ha seleccionado la opción Cortar del menú Edición.
 
 #include <stdio.h>
-
 void menuArchivo() {
     int opcion;
     printf("\nMenu Archivo:\n");
