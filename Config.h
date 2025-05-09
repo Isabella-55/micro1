@@ -1,25 +1,4 @@
-/*!
-\file   Config.h
-\date   2021-09-13
-\author Fulvio Vivas <fulvio.vivas@unicauca.edu.co>
-\brief  configuration bits pic18f4550.
 
-\par Copyright
-Information contained herein is proprietary to and constitutes valuable
-confidential trade secrets of unicauca, and
-is subject to restrictions on use and disclosure.
-
-\par
-Copyright (c) unicauca 2021. All rights reserved.
-
-\par
-The copyright notices above do not evidence any actual or
-intended publication of this material.
-
-\note
-Last modified: 2025-03-26 Cristian Valencia <chpayan@unicauca.edu.co>
-******************************************************************************
-*/
 
 #include <xc.h>
 
