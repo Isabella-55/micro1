@@ -1,0 +1,184 @@
+#include <WiFi.h>
+#include <WebServer.h>
+#include <DHT.h>
+#include <TinyGPS++.h>
+
+// Pines del DHT y tipo
+#define DHTPIN 27
+#define DHTTYPE DHT11
+
+// Pines para el GPS (Serial2)
+#define RXD2 16
+#define TXD2 17
+
+// Inicialización de objetos
+DHT dht(DHTPIN, DHTTYPE);
+TinyGPSPlus gps;
+WebServer server(80);
+
+// Credenciales WiFi
+const char* ssid = "OPPO A79 5G Mercy";
+const char* password = "12345678";
+
+// Variables de sensores
+float temperatura = 0.0;
+float humedad = 0.0;
+double latitud = 0.0;
+double longitud = 0.0;
+
+// Página HTML con diseño + mapa dinámico
+const char MAIN_page[] PROGMEM = R"=====(
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitor de Sensores ESP32</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .card {
+      background-color: #fff;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+    }
+    .label {
+      font-weight: bold;
+      color: #555;
+    }
+    .value {
+      font-size: 1.5em;
+      color: #007ACC;
+    }
+    #map {
+      height: 300px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Datos del ESP32</h1>
+
+  <div class="card">
+    <p class="label">🌡️ Temperatura:</p>
+    <p class="value"><span id="temp">Cargando...</span> °C</p>
+
+    <p class="label">💧 Humedad:</p>
+    <p class="value"><span id="hum">Cargando...</span> %</p>
+  </div>
+
+  <div class="card">
+    <p class="label">📍 Latitud:</p>
+    <p class="value"><span id="lat">Cargando...</span></p>
+
+    <p class="label">📍 Longitud:</p>
+    <p class="value"><span id="lon">Cargando...</span></p>
+  </div>
+
+  <div class="card">
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    let map = L.map('map').setView([0, 0], 2);  // vista inicial
+    let marker = L.marker([0, 0]).addTo(map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function actualizarDatos() {
+      fetch("/sensors")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("temp").textContent = data.temperatura;
+          document.getElementById("hum").textContent = data.humedad;
+          document.getElementById("lat").textContent = data.latitud;
+          document.getElementById("lon").textContent = data.longitud;
+
+          let lat = parseFloat(data.latitud);
+          let lon = parseFloat(data.longitud);
+
+          if (!isNaN(lat) && !isNaN(lon)) {
+            marker.setLatLng([lat, lon]);
+            map.setView([lat, lon], 15); // zoom en ubicación
+          }
+        });
+    }
+
+    setInterval(actualizarDatos, 2000);
+  </script>
+</body>
+</html>
+)=====";
+
+// Handler para la raíz
+void handleRoot() {
+  server.send_P(200, "text/html", MAIN_page);
+}
+
+// Handler para datos de sensores en JSON
+void handleSensors() {
+  temperatura = dht.readTemperature();
+  humedad = dht.readHumidity();
+
+  // Leer datos del GPS
+  while (Serial2.available() > 0) {
+    gps.encode(Serial2.read());
+  }
+
+  if (gps.location.isValid()) {
+    latitud = gps.location.lat();
+    longitud = gps.location.lng();
+  }
+
+  // Crear respuesta JSON
+  String json = "{";
+  json += "\"temperatura\":" + String(temperatura, 1) + ",";
+  json += "\"humedad\":" + String(humedad, 1) + ",";
+  json += "\"latitud\":" + String(latitud, 6) + ",";
+  json += "\"longitud\":" + String(longitud, 6);
+  json += "}";
+
+  server.send(200, "application/json", json);
+}
+
+// Configuración inicial
+void setup() {
+  Serial.begin(115200);
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);  // GPS
+  dht.begin();
+
+  // Conexión WiFi
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado. IP: " + WiFi.localIP().toString());
+
+  // Configurar servidor
+  server.on("/", handleRoot);
+  server.on("/sensors", handleSensors);
+  server.begin();
+  Serial.println("Servidor HTTP iniciado");
+}
+
+// Loop principal
+void loop() {
+  server.handleClient();
+}
